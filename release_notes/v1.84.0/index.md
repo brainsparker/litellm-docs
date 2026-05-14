@@ -43,8 +43,6 @@ pip install litellm==1.84.0
 </TabItem>
 </Tabs>
 
-> Stable promoted from `v1.84.0-rc.1` on top of `v1.83.14-stable`.
->
 > **Heads up — large bundle of behavioral changes.** This release consolidates a lot of reliability and hardening work that shipped in tight sequence. The **Important Behavior Changes** section below covers everything that changes a default, removes a configuration shortcut, or alters a request/response shape, with the opt-out you need to keep prior behavior. Read that section before upgrading a production deployment. If you already validated against `v1.84.0-rc.1`, see the **Changes since v1.84.0-rc.1** section for the post-rc delta.
 
 ## Key Highlights
