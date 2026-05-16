@@ -143,6 +143,52 @@ export ANTHROPIC_DEFAULT_HAIKU_MODEL=claude-haiku-4-5-20251001
 claude
 ```
 
+### Show your LiteLLM models in Claude Code's `/model` picker
+
+By default, the `/model` picker inside Claude Code only lists Anthropic's built-in models — your LiteLLM proxy models won't appear, even after you point `ANTHROPIC_BASE_URL` at the gateway. To populate the picker with the models from your LiteLLM `config.yaml`, set:
+
+```bash
+export CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY=1
+```
+
+With this flag enabled, on startup Claude Code calls `GET {ANTHROPIC_BASE_URL}/v1/models` (using the same `ANTHROPIC_AUTH_TOKEN` / `ANTHROPIC_API_KEY` as inference requests) and adds the returned models to `/model`. Each entry is labeled **"From gateway"** and uses the model's `display_name` when one is provided. Results are cached at `~/.claude/cache/gateway-models.json` and refreshed on each startup.
+
+```bash
+# Launch Claude Code against your LiteLLM proxy with discovery enabled
+export ANTHROPIC_BASE_URL="http://0.0.0.0:4000"
+export ANTHROPIC_AUTH_TOKEN="$LITELLM_MASTER_KEY"
+export CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY=1
+claude
+# then inside the session:
+/model
+```
+
+**Requirements and caveats:**
+
+- Claude Code **v2.1.129 or later**.
+- Only works when `ANTHROPIC_BASE_URL` points at a gateway exposing the Anthropic Messages format. Discovery does **not** run for Bedrock or Vertex pass-through endpoints, nor when `ANTHROPIC_BASE_URL` is unset or points at `api.anthropic.com`.
+- Only models whose `id` begins with `claude` or `anthropic` are added to the picker. Name your entries in `config.yaml` accordingly (e.g. `claude-opus-4-7`, `claude-bedrock-opus`) so they pass the filter.
+- Discovery is **off by default** so that gateways backed by a shared API key don't surface every model the key can access to every user. Set the flag explicitly per user / shell to opt in.
+- If your gateway uses model names that don't match the filter, fall back to selecting them explicitly via `--model <name>` or the `ANTHROPIC_DEFAULT_*_MODEL` environment variables shown above.
+
+:::tip Persist the setting
+
+To make this stick across sessions, add it to your global Claude Code settings at `~/.claude/settings.json`:
+
+```json title="~/.claude/settings.json"
+{
+  "env": {
+    "CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY": "1"
+  }
+}
+```
+
+Fully quit and reopen Claude Code (or restart your IDE for plugin users) so the new setting is picked up.
+
+:::
+
+For more detail on how Claude Code discovers gateway models, see Anthropic's [LLM gateway configuration docs](https://docs.anthropic.com/en/docs/claude-code/llm-gateway#model-selection).
+
 ### Using 1M Context Window
 
 Claude Code supports extended context (1 million tokens) using the `[1m]` suffix:
