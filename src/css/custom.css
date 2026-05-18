@@ -965,15 +965,23 @@ video {
 div[class*='announcementBar'] {
   background: #0078d4 !important;
   border-bottom: none !important;
-  padding: 10px 0 !important;
+  height: auto !important;
+  min-height: 0 !important;
   font-family: var(--ifm-font-family-base);
   font-size: 14px !important;
   letter-spacing: 0.01em;
 }
 
 div[class*='announcementBar'] div[class*='content'] {
+  padding: 14px 48px !important;
   font-weight: 400 !important;
   line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  div[class*='announcementBar'] div[class*='content'] {
+    padding: 12px 20px !important;
+  }
 }
 
 div[class*='announcementBar'] a {
