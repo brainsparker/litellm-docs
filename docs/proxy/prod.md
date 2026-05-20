@@ -61,10 +61,10 @@ For optimal performance in production, we recommend the following resource confi
 ```yaml
 resources:
   requests:
-    cpu: "4"
+    cpu: "1" # should be 1*num_workers
     memory: "4Gi" # should be 4*num_workers
   limits:
-    cpu: "4"
+    cpu: "1"
     memory: "4Gi"
 ```
 
